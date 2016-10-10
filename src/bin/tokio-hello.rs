@@ -6,7 +6,6 @@ use futures::Future;
 use futures::stream::Stream; /* incoming().for_each() */
 use tokio_core::io::Io; /* split() */
 
-
 fn main() {
     let addr = ::std::env::args().nth(1).expect("1 argument required: <bind addr>:<port>");
     let addr = addr.parse::<std::net::SocketAddr>().unwrap();
@@ -19,11 +18,9 @@ fn main() {
     println!("Listening on: {}", addr);
 
     let done = socket.incoming().for_each(|(socket, addr)| {
-        let pair = futures::lazy(|| Ok(socket.split()));
-        let amt = pair.and_then(|(reader, writer)| tokio_core::io::copy(reader, writer));
-
-        handle.spawn(amt.then(move |result| {
-            println!("wrote {:?} bytes to {}", result, addr);
+        let wrt = tokio_core::io::write_all(socket, b"hello\n");
+        handle.spawn(wrt.then(move |res| {
+            println!("result {:?}: {:?}", res, addr);
             Ok(())
         }));
 
