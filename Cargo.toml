@@ -3,11 +3,12 @@ name = "nine-p"
 version = "0.0.0"
 authors = ["Cody P Schafer <dev@codyps.com>"]
 
-[features]
-use-rotor = []
-use-tokio = ["tokio-core", "futures"]
+#[features]
+#default = [ "tokio" ]
+#tokio = [ "tokio-core", "futures" ]
 
 [dependencies]
-rotor = { version = "*", optional = true }
-tokio-core = { version = "*", optional = true }
-futures = { version = "*", optional = true }
+futures = "*"
+tokio-core = "*"
+tokio-service = "*"
+tokio-proto = "*"
